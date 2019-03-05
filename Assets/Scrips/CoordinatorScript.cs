@@ -45,11 +45,85 @@ public class CoordinatorScript : MonoBehaviour
 		}
     }
 
+	void SwapFirsts(){
+		if(firstPath.Count > secondPath.Count + distanceMatrix[0,firstPathTurrets[1].turretNumber].Count*2){
+			//give first to second
+			List<Node> path1 = FindPath(startPosCar1,firstPathTurrets[2]);
+			int removeCount = 0;
+			foreach (Node target in firstPath) {
+				if (target != firstPathTurrets [2]) {
+					removeCount++;
+				} else {
+					removeCount++;
+					break;
+				}
+			}
+			firstPath.RemoveRange (0, removeCount);
+			removeCount = 0;
+			firstPath.InsertRange (0, path1);
+			List<Node> path2 = FindPath (startPosCar2, firstPathTurrets [1]);
+			//nodes[firstPathTurrets[1].newX,firstPathTurrets[1].newZ].cameFrom 
+			List<Node> path21 = FindPath (firstPathTurrets [1], secondPathTurrets [1]);
+			path2.AddRange (path21);
+			foreach (Node target in secondPath) {
+				if (target != secondPathTurrets [1]) {
+					removeCount++;
+				} else {
+					removeCount++;
+					break;
+				}
+			}
+			secondPath.RemoveRange (0, removeCount);
+			secondPath.InsertRange (0, path2);
+		}else if(firstPath.Count > thirdPath.Count + distanceMatrix[0,firstPathTurrets[1].turretNumber].Count*2){
+			//give first to third
+			List<Node> path1 = FindPath(startPosCar1,firstPathTurrets[2]);
+			int removeCount = 0;
+			foreach (Node target in firstPath) {
+				if (target != firstPathTurrets [2]) {
+					removeCount++;
+				} else {
+					removeCount++;
+					break;
+				}
+			}
+			firstPath.RemoveRange (0, removeCount);
+			removeCount = 0;
+			firstPath.InsertRange (0, path1);
+			List<Node> path3 = FindPath (startPosCar3, firstPathTurrets [1]);
+			//nodes[firstPathTurrets[1].newX,firstPathTurrets[1].newZ].cameFrom 
+			List<Node> path31 = FindPath (firstPathTurrets [1], thirdPathTurrets [1]);
+			path3.AddRange (path31);
+			foreach (Node target in thirdPath) {
+				if (target != thirdPathTurrets [1]) {
+					removeCount++;
+				} else {
+					removeCount++;
+					break;
+				}
+			}
+			thirdPath.RemoveRange (0, removeCount);
+			thirdPath.InsertRange (0, path3);
+		}else if(secondPath.Count > firstPath.Count + distanceMatrix[0,secondPathTurrets[1].turretNumber].Count*2){
+			//give second to first
+		}else if(secondPath.Count > thirdPath.Count + distanceMatrix[0,secondPathTurrets[1].turretNumber].Count*2){
+			//give second to third
+		}else if(thirdPath.Count > firstPath.Count + distanceMatrix[0,thirdPathTurrets[1].turretNumber].Count*2){
+			//give third to first
+		}else if(thirdPath.Count > secondPath.Count + distanceMatrix[0,thirdPathTurrets[1].turretNumber].Count*2){
+			//give third to second
+		}
+	}
+
 
 	List<Node>[,] distanceMatrix;
 	public List<Node> firstPath;
 	public List<Node> secondPath;
 	public List<Node> thirdPath;
+
+	List<Node> firstPathTurrets;
+	List<Node> secondPathTurrets;
+	List<Node> thirdPathTurrets;
 
 	public void OrderTurrets(){
 		distanceMatrix = new List<Node>[turrets.Length+1, turrets.Length+1];
@@ -59,9 +133,17 @@ public class CoordinatorScript : MonoBehaviour
 		firstPath = new List<Node> ();
 		secondPath = new List<Node> ();
 		thirdPath = new List<Node> ();
+		firstPathTurrets = new List<Node>();
+		firstPathTurrets.Add (startPosCar1);
+		secondPathTurrets = new List<Node>();
+		secondPathTurrets.Add (startPosCar2);
+		thirdPathTurrets = new List<Node>();
+		thirdPathTurrets.Add (startPosCar3);
 
 		for (int i = 0; i < numberOfTurrets; i++) {
 			int currentLow = 10000;
+			//int currentLow2 = 10000;
+			//int currentLow3 = 10000;
 			Node best = null;
 			List<Node> bestPath = null;
 			int bestCar = 0;
@@ -88,8 +170,33 @@ public class CoordinatorScript : MonoBehaviour
 					resetNodes ();
 					path3 = FindPath (old3, turrets [j]);
 				}
+				float birdDistance1 = Vector3.Distance (old1.position, turrets [j].position);
+				float birdDistance2 = Vector3.Distance (old2.position, turrets [j].position);
+				float birdDistance3 = Vector3.Distance (old3.position, turrets [j].position);
+				bool first = false;
+				bool second = false;
+				bool third = false;
+				if (path2.Count + secondPath.Count == path.Count + firstPath.Count && path2.Count + secondPath.Count < path3.Count + thirdPath.Count) {
+					if (birdDistance2 < birdDistance1) {
+						second = true;
+					} else {
+						first = true;
+					}
+				} else if (path2.Count + secondPath.Count == path3.Count + thirdPath.Count && path2.Count + secondPath.Count < path.Count + firstPath.Count) {
+					if (birdDistance2 < birdDistance3) {
+						second = true;
+					} else {
+						third = true;
+					}
+				} else if (path3.Count + thirdPath.Count == path.Count + firstPath.Count && path.Count + firstPath.Count < path2.Count + secondPath.Count) {
+					if (birdDistance3 < birdDistance1) {
+						third = true;
+					} else {
+						first = true;
+					}
+				}
 
-				if ((path2.Count + secondPath.Count < path.Count + firstPath.Count && path2.Count + secondPath.Count < path3.Count + thirdPath.Count) || (path2.Count < path.Count / 2 && path2.Count < path3.Count / 2)) {
+				if ((!first && !third && path2.Count + secondPath.Count <= path.Count + firstPath.Count && path2.Count + secondPath.Count <= path3.Count + thirdPath.Count) || (path2.Count < path.Count / 2 && path2.Count < path3.Count / 2)) {
 					if (path2.Count + secondPath.Count < currentLow) {
 						best = turrets [j];
 						bestJ = j;
@@ -98,7 +205,7 @@ public class CoordinatorScript : MonoBehaviour
 						bestCar = 2;
 					}
 				}
-				if ((path3.Count + thirdPath.Count < path.Count + firstPath.Count && path3.Count + thirdPath.Count < path2.Count + secondPath.Count) || (path3.Count < path.Count / 2 && path3.Count < path2.Count / 2)) {
+				if ((!first && !second && path3.Count + thirdPath.Count <= path.Count + firstPath.Count && path3.Count + thirdPath.Count <= path2.Count + secondPath.Count) || (path3.Count < path.Count / 2 && path3.Count < path2.Count / 2)) {
 					if (path3.Count + thirdPath.Count < currentLow) {
 						best = turrets [j];
 						bestJ = j;
@@ -107,7 +214,7 @@ public class CoordinatorScript : MonoBehaviour
 						bestCar = 3;
 					}
 				} 
-				if ((path.Count + firstPath.Count <= path3.Count + thirdPath.Count && path.Count + firstPath.Count <= path2.Count + secondPath.Count) || (path.Count < path2.Count / 2 && path.Count < path3.Count / 2)) {
+				if ((!second && !third && path.Count + firstPath.Count <= path3.Count + thirdPath.Count && path.Count + firstPath.Count <= path2.Count + secondPath.Count) || (path.Count < path2.Count / 2 && path.Count < path3.Count / 2)) {
 					if (path.Count + firstPath.Count < currentLow) {
 						best = turrets [j];
 						bestJ = j;
@@ -126,14 +233,18 @@ public class CoordinatorScript : MonoBehaviour
 			if (bestCar == 2) {
 				secondPath.AddRange (bestPath);
 				old2 = turrets [i];
+				secondPathTurrets.Add (old2);
 			} else if (bestCar == 3) {
 				thirdPath.AddRange (bestPath);
 				old3 = turrets [i];
+				thirdPathTurrets.Add (old3);
 			} else if (bestCar == 1) {
 				firstPath.AddRange (bestPath);
 				old1 = turrets [i];
+				firstPathTurrets.Add (old1);
 			}
 		}
+		//SwapFirsts ();
 	}
 
 	void resetNodes(){
