@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657838, g: 0.49641234, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -11575,7 +11575,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de0a9b23fa3784d75b3bdd0088f57e67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  trajectory_filename: Text/Traj_sweep_leader
+  trajectory_filename: Text/Traj_sweep_leader_slow
   recordedInfo:
     position_array: []
     rotation_array: []
@@ -22725,6 +22725,12 @@ MonoBehaviour:
   terrain_manager_game_object: {fileID: 153530180}
   friends: []
   enemies: []
+  leader: {fileID: 1471962239}
+  virtualLeaderObject: {fileID: 8397607589857933377, guid: a6c0e6054a02e3f428dea8f2aac634cc,
+    type: 3}
+  side: Right
+  debugBox: {fileID: 7633059374788940621, guid: 1d6f19f9e620ebe418fda198053d6fcb,
+    type: 3}
 --- !u!114 &458510688
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -82733,6 +82739,12 @@ MonoBehaviour:
   terrain_manager_game_object: {fileID: 153530180}
   friends: []
   enemies: []
+  leader: {fileID: 327483141}
+  virtualLeaderObject: {fileID: 8397607589857933377, guid: a6c0e6054a02e3f428dea8f2aac634cc,
+    type: 3}
+  side: Right
+  debugBox: {fileID: 2144233845652300969, guid: 0c3d1b20df80d1e41b3469ccdbd82dff,
+    type: 3}
 --- !u!114 &1471962244
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -100313,6 +100325,12 @@ MonoBehaviour:
   terrain_manager_game_object: {fileID: 153530180}
   friends: []
   enemies: []
+  leader: {fileID: 1993684190}
+  virtualLeaderObject: {fileID: 8397607589857933377, guid: a6c0e6054a02e3f428dea8f2aac634cc,
+    type: 3}
+  side: Left
+  debugBox: {fileID: 7633059374788940621, guid: 1d6f19f9e620ebe418fda198053d6fcb,
+    type: 3}
 --- !u!114 &1902951897
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -100805,10 +100823,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 658b0de4ee3ec4f2fbc93d4ccc293929, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  terrain_manager_game_object: {fileID: 153530180}
-  information_blackboard: {fileID: 0}
-  x_goal: 10
-  y_goal: 10
 --- !u!114 &1974639106
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -101193,6 +101207,12 @@ MonoBehaviour:
   terrain_manager_game_object: {fileID: 153530180}
   friends: []
   enemies: []
+  leader: {fileID: 327483141}
+  virtualLeaderObject: {fileID: 8397607589857933377, guid: a6c0e6054a02e3f428dea8f2aac634cc,
+    type: 3}
+  side: Left
+  debugBox: {fileID: 2144233845652300969, guid: 0c3d1b20df80d1e41b3469ccdbd82dff,
+    type: 3}
 --- !u!114 &1993684193
 MonoBehaviour:
   m_ObjectHideFlags: 0
