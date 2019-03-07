@@ -1146,7 +1146,7 @@ Transform:
 --- !u!199 &120062877
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -5845,7 +5845,7 @@ Transform:
 --- !u!199 &138796520
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -10651,8 +10651,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   terrain_manager_game_object: {fileID: 342108197}
-  friends: []
-  enemies: []
+  coordinator: {fileID: 571534567}
+  numberOfStepsThatMustBeSeen: 10
+  showPath: 0
 --- !u!114 &172169029
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11802,7 +11803,7 @@ Transform:
 --- !u!199 &379793433
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -17138,7 +17139,7 @@ Transform:
 --- !u!199 &518688731
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -22171,6 +22172,73 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 568755300}
   m_Mesh: {fileID: 4300040, guid: e6fec471c20b9d148b1f87910e67bea4, type: 3}
+--- !u!1 &571534567
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 571534569}
+  - component: {fileID: 571534568}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &571534568
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 571534567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed0c97a9812f80e4eaca7dd358dd9bf9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  terrain_manager_game_object: {fileID: 342108197}
+  car1: {fileID: 3165470286205641539}
+  car2: {fileID: 172169026}
+  car3: {fileID: 1193214289}
+  xGridSize: 0
+  zGridSize: 0
+  xN: 0
+  zN: 0
+  info:
+    file_name: 
+    x_low: 0
+    x_high: 0
+    x_N: 0
+    z_low: 0
+    z_high: 0
+    z_N: 0
+    start_pos: {x: 0, y: 0, z: 0}
+    goal_pos: {x: 0, y: 0, z: 0}
+  lineRenderers: {fileID: 966512885168712743, guid: b823118c833b4344884529af150af6f3,
+    type: 3}
+  tester: {fileID: 4512204184830508160, guid: e26ea2c94cb90444696e03142fd250c8, type: 3}
+  debugMap: 0
+  badCube: {fileID: 7633059374788940621, guid: 1d6f19f9e620ebe418fda198053d6fcb, type: 3}
+  okCube: {fileID: 2144233845652300969, guid: 0c3d1b20df80d1e41b3469ccdbd82dff, type: 3}
+--- !u!4 &571534569
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 571534567}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 220.06778, y: 0.53336596, z: 232.17122}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &573270076
 GameObject:
   m_ObjectHideFlags: 0
@@ -23266,7 +23334,7 @@ Transform:
 --- !u!199 &849469253
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -29359,7 +29427,7 @@ Transform:
 --- !u!199 &1188502044
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -34074,8 +34142,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   terrain_manager_game_object: {fileID: 342108197}
-  friends: []
-  enemies: []
+  coordinator: {fileID: 571534567}
+  numberOfStepsThatMustBeSeen: 10
+  showPath: 0
 --- !u!114 &1193214292
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -34251,7 +34320,7 @@ Transform:
 --- !u!199 &1200196616
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -38979,7 +39048,7 @@ Transform:
 --- !u!199 &1222980605
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -44342,7 +44411,7 @@ Transform:
 --- !u!199 &1493766483
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -49151,7 +49220,7 @@ Transform:
 --- !u!199 &1504577935
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -55979,7 +56048,7 @@ WheelCollider:
 --- !u!199 &2966349680787431365
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -56041,7 +56110,7 @@ ParticleSystemRenderer:
 --- !u!199 &2966403652839512037
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -56103,7 +56172,7 @@ ParticleSystemRenderer:
 --- !u!199 &2967068034054402271
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -56165,7 +56234,7 @@ ParticleSystemRenderer:
 --- !u!199 &2967224889261882397
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -76724,7 +76793,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3165470286205641539}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 96468c245ae8e0d4f8f1c7a7b8b0542e, type: 3}
   m_Name: 
@@ -76783,14 +76852,15 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3165470286205641539}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cd8f88dbef86049759c7f8b36661fe22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   terrain_manager_game_object: {fileID: 342108197}
-  friends: []
-  enemies: []
+  coordinator: {fileID: 571534567}
+  numberOfStepsThatMustBeSeen: 10
+  showPath: 0
 --- !u!114 &3165470286205641659
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -82913,7 +82983,7 @@ ParticleSystem:
 --- !u!199 &3165470287241103725
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}

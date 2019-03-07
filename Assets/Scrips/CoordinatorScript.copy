@@ -12,17 +12,7 @@ public class CoordinatorScript : MonoBehaviour
 	public GameObject car3;
 	public Node[,] nodes;
 	public Node[] turrets;
-	List<Node1> enemies;
-	private GameObject[] friends;
-	public float xGridSize;
-	public float zGridSize;
-	public int xN;
-	public int zN;
-	public Node1[,] map;
-	public TerrainInfo info;
-	public List<Node1> inSightNode;
-	public List<Node1> outSightNode;
-	public List<Node1> guardList;
+	GameObject[] enemies;
 	public GameObject lineRenderers;
     // Start is called before the first frame update
     void Start()
@@ -34,27 +24,15 @@ public class CoordinatorScript : MonoBehaviour
 		//had to delay for terrain_manager to fix the map, strange thing
 		yield return new WaitForSeconds (2f);
 		terrain_manager = terrain_manager_game_object.GetComponent<TerrainManager> ();
-		friends = GameObject.FindGameObjectsWithTag("Player");
-		info = terrain_manager.myInfo;
-		CreateMap();
-		outSightNode = new List<Node1>();
-		inSightNode = new List<Node1>();
-		foreach (Node1 node in map)
-		{
-			if (node.traversable)
-				outSightNode.Add(node);
-		}
-		Node1 startNode = GetNodeInMap(friends[1].transform.position, xGridSize, zGridSize);
-		GreedyFindGuard(startNode);
-		Init();
+		Init ();
 		OrderTurrets();
 
-		ShowPath(firstPath);
-		ShowPath(secondPath);
-		ShowPath(thirdPath);
+		ShowPath (firstPath);
+		ShowPath (secondPath);
+		ShowPath (thirdPath);
 
-		Debug.Log(firstPath.Count);
-		Debug.Log(secondPath.Count);
+		Debug.Log (firstPath.Count);
+		Debug.Log (secondPath.Count);
 		Debug.Log(thirdPath.Count);
 		//printDistanceMatrix ();
 	}
@@ -293,7 +271,6 @@ public class CoordinatorScript : MonoBehaviour
 	[SerializeField]
 	GameObject okCube;
 	int numberOfTurrets = 0;
-	
 	//Lots of stuff initializing our own grid out of world coordinates and precalculated grid.
 	void Init(){
 		float worldposXmin = terrain_manager.myInfo.x_low;
@@ -316,14 +293,15 @@ public class CoordinatorScript : MonoBehaviour
 		int newX = (int)((worldposXmax - worldposXmin) / newGridSizeX);
 		int newZ = (int)((worldposZmax - worldposZmin) / newGridSizeZ);
 
-		//Calculate how many times blocksizeX (the blocksizes given to us) must be divided to be smaller then 5 pixel wide/long
+		//Calculate how many times blocksizeX (the blocksizes given to us) must be devided to be smaller then 5 pixel wide/long
 		nodes = new Node[newX, newZ];
 		int oldx = -1;
 		int oldz = -1;
 		float posX = worldposXmin;
 		float posZ = worldposZmin;
 
-		turrets = new Node[guardList.Count];
+		enemies = GameObject.FindGameObjectsWithTag("Enemy");
+		turrets = new Node[enemies.Length];
 
 		for (int i = 0; i < newX; i++) {
 			if (i % (numblocksX) == 0) {
@@ -349,9 +327,8 @@ public class CoordinatorScript : MonoBehaviour
 				Vector3 nodePosition = new Vector3 (posX, 0f, posZ);
 				bool hasturret = false;
 				GameObject test = Instantiate (tester, nodePosition, Quaternion.identity);
-				
-				foreach (Node1 turret in guardList) {
-					if (test.GetComponent<BoxCollider> ().bounds.Contains(turret.position)) {
+				foreach (GameObject turret in enemies) {
+					if (test.GetComponent<BoxCollider> ().bounds.Contains(turret.transform.position)) {
 						hasturret = true;
 					}
 				}
@@ -382,132 +359,6 @@ public class CoordinatorScript : MonoBehaviour
 		}
 	}
 
-	bool NodeInSight(Node1 currentNode, Node1 targetNode)
-        {
-            int myLayerMask = 1<<0;
-            myLayerMask = ~myLayerMask;
-            RaycastHit hit;
-            bool x = Physics.Raycast(currentNode.position, (targetNode.position - currentNode.position).normalized, out hit, (int)Vector3.Distance(targetNode.position, currentNode.position), myLayerMask);
-            if (x)
-                return false;
-            else
-                return true;
-        }
-
-        List<Node1> NodesInSight(Node1 currentNode)
-        {
-            List<Node1> nodesInSight = new List<Node1>();
-            foreach (Node1 targetNode in outSightNode)
-            {
-                if (NodeInSight(currentNode, targetNode))
-                    nodesInSight.Add(targetNode);
-            }
-            return nodesInSight;
-        }
-
-        void AddAndRemoveNode(List<Node1> currentInSight)
-        {
-            foreach (Node1 node in currentInSight)
-            {
-                if (!inSightNode.Contains(node))
-                    inSightNode.Add(node);
-                if (outSightNode.Contains(node))
-                    outSightNode.Remove(node);
-            }
-        }
-
-        void GreedyFindGuard(Node1 currentNode)
-        {
-            List<Node1> currentInSight = new List<Node1>();
-            currentInSight = NodesInSight(currentNode);
-            AddAndRemoveNode(currentInSight);
-            guardList = new List<Node1>();
-            while (outSightNode.Count != 0)
-            {
-                int temp = 0;
-                Node1 bestNode = null;
-                List<Node1> bestInSightNodes = new List<Node1>();
-                foreach (Node1 node in map)
-                {
-                    if (node.traversable)
-                    {
-                        List<Node1> tempNodeInSight = new List<Node1>();
-                        tempNodeInSight = NodesInSight(node);
-                        if (tempNodeInSight.Count >= temp)
-                        {
-                            temp = tempNodeInSight.Count;
-                            bestNode = node;
-                            bestInSightNodes = tempNodeInSight;
-                        }
-                    }
-                }
-                AddAndRemoveNode(bestInSightNodes);
-                guardList.Add(bestNode);
-            }
-        }
-                float GetXPos(int i, float xGridSize)
-        {
-            return info.x_low + (xGridSize / 2) + xGridSize * i;
-        }
-
-        float GetZPos(int i, float zGridSize)
-        {
-            return info.z_low + (zGridSize / 2) + zGridSize * i;
-        }
-
-        private void CreateMap()
-        {
-            Vector3 pos;
-            // float parameter = 1.8f;
-            int xStep = 2;
-            int zStep = 2;
-            xGridSize = (info.x_high - info.x_low) / info.x_N / xStep;
-            zGridSize = (info.z_high - info.z_low) / info.z_N / zStep;
-            xN = xStep * info.x_N;
-            zN = zStep * info.z_N;
-            map = new Node1[xN, zN];
-            for (int i = 0; i < xN; i++)
-            {
-                for (int j = 0; j < zN; j++)
-                {
-                    if (info.traversability[(int)Mathf.Floor(i / xStep), (int)Mathf.Floor(j / zStep)] > 0.5f)
-                    {
-                        pos = new Vector3(GetXPos(i, xGridSize), 0f, GetZPos(j, zGridSize));
-                        map[i, j] = new Node1(false, false, pos, i, j);
-                    }
-                    else
-                    {
-                        pos = new Vector3(GetXPos(i, xGridSize), 0f, GetZPos(j, zGridSize));
-                        map[i, j] = new Node1(true, false, pos, i, j);
-                    }
-                }
-            }
-        }
-
-        private Node1 GetNodeInMap(Vector3 worldPosition, float xIntervel, float zIntervel)
-        {
-            int x = 0;
-            int z = 0;
-            float count = info.x_low + xIntervel;
-            Node1 currentNode;
-            while (count <= worldPosition.x)
-            {
-                x++;
-                count += xIntervel;
-            }
-            count = info.z_low + zIntervel;
-            while (count <= worldPosition.z)
-            {
-                z++;
-                count += zIntervel;
-            }
-            if (x < map.GetLength(0) && z < map.GetLength(1))
-            {
-                currentNode = map[x, z];
-                return currentNode;
-            }
-            else return null;
-        }
 	void ShowMapTraversability(Node node){
 		if (terrain_manager.myInfo.traversability [node.blockX, node.blockZ] == 1f) {
 			Instantiate (badCube, new Vector3 (node.position.x, 10f, node.position.z), Quaternion.identity);
@@ -689,26 +540,6 @@ public class CoordinatorScript : MonoBehaviour
 			newZ = newGridZ;
 			blockX = gridPosX;
 			blockZ = gridPosZ;
-		}
-	}
-	
-	public class Node1
-	{
-		public bool traversable;
-		public Vector3 position;
-		public bool occupied;
-		public int xGrid;
-		public int zGrid;
-		public Node1 parent;
-		public List<Node1> children;
-		public Node1(bool _traversable, bool _occupied, Vector3 _position, int x, int z)
-		{
-			children = new List<Node1>();
-			traversable = _traversable;
-			occupied = _occupied;
-			position = _position;
-			xGrid = x;
-			zGrid = z;
 		}
 	}
 
