@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-
 namespace UnityStandardAssets.Vehicles.Car
 {
     [RequireComponent(typeof(CarController))]
@@ -21,15 +20,21 @@ namespace UnityStandardAssets.Vehicles.Car
 		public GameObject virtualLeaderObject;
 		public string side;
 		public GameObject debugBox;
+
+		Vector3 referenceForward;
+
+		Vector3 forwardDirection;
+
 		GameObject virtualLeader;
 		GameObject box;
 		List<VirtualLeader> virtualFrames;
 
-		int frameCount = 15;
+		int frameCount = 3;
 
 		float distanceOffset;
 		float defaultDistanceOffset = 22;
 		float angle = 90;
+		float forwardAngle = 70;
 		private void Start()
 		{
 			// get the car controller
@@ -39,6 +44,7 @@ namespace UnityStandardAssets.Vehicles.Car
 			virtualLeader = Instantiate (virtualLeaderObject, leader.transform.position, Quaternion.identity); 
 			if (side == "Left") {
 				angle = -angle;
+				forwardAngle = -forwardAngle;
 			}
 			// note that both arrays will have holes when objects are destroyed
 			// but for initial planning they should work
@@ -46,44 +52,60 @@ namespace UnityStandardAssets.Vehicles.Car
 			enemies = GameObject.FindGameObjectsWithTag("Enemy");
 			distanceOffset = defaultDistanceOffset;
 			referencePosition = virtualLeader.transform.position;
-			//box = Instantiate (debugBox, referencePosition, Quaternion.identity);
+			forwardDirection = transform.forward;
+			box = Instantiate (debugBox, referencePosition, Quaternion.identity);
 			// Plan your path here
 			// ...
 		}
 		Vector3 referencePosition;	
 		private void Update()
 		{
-			virtualFrames.Add (new VirtualLeader (leader.transform.position, leader.transform.forward));
-			if (virtualFrames.Count > frameCount) {
-				virtualLeader.transform.position = virtualFrames [0].position;
 
-				Vector3 obstacleOffset = -virtualFrames [frameCount].direction;
-				obstacleOffset *= defaultDistanceOffset+2;
-				obstacleOffset = Quaternion.AngleAxis (angle, transform.up) * obstacleOffset;
+
+			if (leader.name != "ReplayCar (2)") {
+				virtualFrames.Add (new VirtualLeader (leader.transform.position, leader.GetComponent<CarAI4> ().forwardDirection));
+			} else {
+				virtualFrames.Add (new VirtualLeader (leader.transform.position, leader.transform.forward));
+			}
+
+			if (virtualFrames.Count > frameCount) {
+				float angleToLeader = CalculateAngleFromVirtual (virtualFrames[0], leader.transform.position);
+
+				virtualLeader.transform.position = virtualFrames [0].position;
+				forwardDirection = virtualFrames [0].direction;
+
+				Vector3 obstacleOffset = virtualFrames [frameCount].direction;
+				obstacleOffset *= defaultDistanceOffset+8;
+				obstacleOffset = Quaternion.AngleAxis (-forwardAngle, transform.up) * obstacleOffset;
 				Vector3 obstaclePosition = obstacleOffset + virtualFrames [frameCount].position; 
 
-				Vector3 carOffset = -transform.forward;
-				carOffset *= 10;
-				carOffset = Quaternion.AngleAxis (angle, transform.up) * carOffset;
-				Vector3 carPosOffset = transform.position + carOffset;
+				obstacleOffset = -virtualFrames [frameCount].direction;
+				obstacleOffset *= defaultDistanceOffset;
+				obstacleOffset = Quaternion.AngleAxis (angle, transform.up) * obstacleOffset;
+				Vector3 testPos = obstacleOffset + virtualFrames [frameCount].position;
 
 				Vector3 offset = -virtualFrames [0].direction;
-				Vector3 test = offset;
+				Vector3 test = -virtualFrames[0].direction;
 				offset *= distanceOffset;
 				offset = Quaternion.AngleAxis (angle, transform.up) * offset;
 				referencePosition = offset + virtualLeader.transform.position;
 				virtualFrames.RemoveAt (0);
 
-				test *= defaultDistanceOffset+2;
+			
+				test *= defaultDistanceOffset+5;
 				test = Quaternion.AngleAxis (angle, transform.up) * test;
 				Vector3 testPosition = test + virtualLeader.transform.position;
 
-				if (FreeOfObstacles (obstaclePosition) && FreeOfObstacles (carPosOffset) && FreeOfObstacles(testPosition)) {
+				if (angleToLeader > 10 && side == "Right") {
+					distanceOffset = 2f;
+				} else if (angleToLeader < -10 && side == "Left") {
+					distanceOffset = 2f;
+				} else if (FreeOfObstacles (obstaclePosition) && FreeOfObstacles(testPosition) && FreeOfObstacles(testPos)) {
 					distanceOffset = defaultDistanceOffset;
 				} else {
-					distanceOffset = 5f;
+					distanceOffset = 2f;
 				}
-				//box.transform.position = referencePosition + new Vector3(0,5,0);
+				box.transform.position = referencePosition + new Vector3(0,5,0);
 			}
 		}
 		private void LateUpdate(){
@@ -96,12 +118,17 @@ namespace UnityStandardAssets.Vehicles.Car
 			float distanceToRefPos = Vector3.Distance (transform.position, referencePosition);
 			float distanceToLeader = Vector3.Distance (transform.position, leader.transform.position);
 			Vector3 direction = (referencePosition - transform.position).normalized;
-			float steering = angleToRefPos / 45;
+			float steeringDependency = 45f;
+			if (distanceToRefPos > 25) {
+				steeringDependency = 120f;
+			}
+
+			float steering = angleToRefPos / steeringDependency;
 			float accelleration = 1f;
 			float brake = 0f;
 			bool refPosIsInFront = Vector3.Dot(direction, transform.forward) > 0f;
 
-			float possibleDistance = 0.0087f * (m_Car.CurrentSpeed * m_Car.CurrentSpeed) + 0.18f * m_Car.CurrentSpeed - 6.45f;
+			float possibleDistance = 0.0087f * (m_Car.CurrentSpeed * m_Car.CurrentSpeed) + 0.18f * m_Car.CurrentSpeed - 8.45f;
 
 			if (refPosIsInFront && possibleDistance < distanceToRefPos) {
 				accelleration = 1f;
@@ -110,21 +137,17 @@ namespace UnityStandardAssets.Vehicles.Car
 				accelleration = 0f;
 				brake = -1f;
 				if (!refPosIsInFront && possibleDistance < distanceToLeader) {
-					steering = angleToLeader / 25;
+					steering = angleToLeader / steeringDependency;
 					brake = 0f;
-					accelleration = 1f;
+					accelleration = 0.5f;
 				} else {
 					steering = -steering;
 				}
 			}
 
-			if (distanceToLeader < 10) {
-				if (m_Car.CurrentSpeed < 2) {
-					steering = -angleToLeader / 45;
-				} else {
-					steering = angleToLeader / 45;
-				}
-				brake = -1f;
+			if (distanceToLeader < distanceToRefPos && !refPosIsInFront) {
+				
+				brake = 0f;
 				accelleration = 0f;
 			}
 			m_Car.Move (steering, accelleration, brake, 0f);
@@ -137,6 +160,16 @@ namespace UnityStandardAssets.Vehicles.Car
 			} else {
 				return true;
 			}
+		}
+
+		float CalculateAngleFromVirtual(VirtualLeader virtualCar, Vector3 target){
+			Vector3 targetDirection = target - virtualCar.position;
+			float angle = Vector3.Angle (targetDirection, virtualCar.direction);
+			Vector3 test = Vector3.Cross (targetDirection, virtualCar.direction);
+			if(test.y > 0){
+				angle = -angle;
+			}
+			return angle;
 		}
 
 		float CalculateAngle(Vector3 target){

@@ -244,7 +244,7 @@ public class CoordinatorScript : MonoBehaviour
 				firstPathTurrets.Add (old1);
 			}
 		}
-		//SwapFirsts ();
+		SwapFirsts ();
 	}
 
 	void resetNodes(){
@@ -272,7 +272,7 @@ public class CoordinatorScript : MonoBehaviour
 	GameObject okCube;
 	int numberOfTurrets = 0;
 	//Lots of stuff initializing our own grid out of world coordinates and precalculated grid.
-	void Init(){
+	public void Init(){
 		float worldposXmin = terrain_manager.myInfo.x_low;
 		float worldposXmax = terrain_manager.myInfo.x_high;
 
@@ -528,6 +528,7 @@ public class CoordinatorScript : MonoBehaviour
 
 		public int gScore;
 		public int hScore;
+		public int threatScore;
 
 		public Node cameFrom;
 

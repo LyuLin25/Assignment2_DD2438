@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 39760995}
   - component: {fileID: 39760997}
   - component: {fileID: 39760996}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: GatelingGun_L3_Arm_LOD1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -88,7 +88,7 @@ GameObject:
   - component: {fileID: 119205085}
   - component: {fileID: 119205087}
   - component: {fileID: 119205086}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: GatelingGun_L3_Base_LOD0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -165,7 +165,7 @@ GameObject:
   - component: {fileID: 154510075}
   - component: {fileID: 154510077}
   - component: {fileID: 154510076}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: BulletImpact
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4863,7 +4863,7 @@ GameObject:
   - component: {fileID: 214394880}
   - component: {fileID: 214394882}
   - component: {fileID: 214394881}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: GatelingGun_L3_BaseRotation_LOD1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4940,7 +4940,7 @@ GameObject:
   - component: {fileID: 381821376}
   - component: {fileID: 381821378}
   - component: {fileID: 381821377}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: GatelingGun_L3_Barrel_LOD0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5019,7 +5019,7 @@ GameObject:
   - component: {fileID: 530427390}
   - component: {fileID: 530427389}
   - component: {fileID: 530427393}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: GatlingGunTurret
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -5143,7 +5143,7 @@ GameObject:
   - component: {fileID: 533915723}
   - component: {fileID: 533915725}
   - component: {fileID: 533915724}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Traser_ParticleSystem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9842,7 +9842,7 @@ GameObject:
   - component: {fileID: 776000840}
   - component: {fileID: 776000842}
   - component: {fileID: 776000841}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: GatelingGun_L3_Base_LOD1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9917,7 +9917,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 809333000}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: GatelingGun_L3_Arm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9953,7 +9953,7 @@ GameObject:
   - component: {fileID: 874460750}
   - component: {fileID: 874460752}
   - component: {fileID: 874460751}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: GatelingGun_L3_BaseRotation_LOD2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10028,7 +10028,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 925117726}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: GatelingGun_L3_Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10064,7 +10064,7 @@ GameObject:
   - component: {fileID: 1060797111}
   - component: {fileID: 1060797113}
   - component: {fileID: 1060797112}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: GatelingGun_L3_BaseRotation_LOD0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10141,7 +10141,7 @@ GameObject:
   - component: {fileID: 1098694044}
   - component: {fileID: 1098694046}
   - component: {fileID: 1098694045}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: GatelingGun_L3_Base_LOD2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10218,7 +10218,7 @@ GameObject:
   - component: {fileID: 1170109733}
   - component: {fileID: 1170109735}
   - component: {fileID: 1170109734}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: GatelingGun_L3_Arm_LOD0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10295,7 +10295,7 @@ GameObject:
   - component: {fileID: 1238219170}
   - component: {fileID: 1238219172}
   - component: {fileID: 1238219171}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: GatelingGun_L3_Barrel_LOD2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10372,7 +10372,7 @@ GameObject:
   - component: {fileID: 1251871063}
   - component: {fileID: 1251871065}
   - component: {fileID: 1251871064}
-  m_Layer: 5
+  m_Layer: 2
   m_Name: HealthBG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10447,7 +10447,7 @@ GameObject:
   - component: {fileID: 1260780553}
   - component: {fileID: 1260780555}
   - component: {fileID: 1260780554}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: GatelingGun_L3_GunBody_LOD1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10522,7 +10522,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1511490174}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: GatelingGun_L3_Barrel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10555,7 +10555,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1531129323}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: GatelingGun_L3_GunBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10592,7 +10592,7 @@ GameObject:
   - component: {fileID: 1535691693}
   - component: {fileID: 1535691695}
   - component: {fileID: 1535691694}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: GatelingGun_L3_Arm_LOD2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10669,7 +10669,7 @@ GameObject:
   - component: {fileID: 1561510961}
   - component: {fileID: 1561510960}
   - component: {fileID: 1561510959}
-  m_Layer: 5
+  m_Layer: 2
   m_Name: HealthBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10743,7 +10743,7 @@ GameObject:
   - component: {fileID: 1603617450}
   - component: {fileID: 1603617452}
   - component: {fileID: 1603617451}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: GatelingGun_L3_Barrel_LOD1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10820,7 +10820,7 @@ GameObject:
   - component: {fileID: 1642645499}
   - component: {fileID: 1642645497}
   - component: {fileID: 1642645498}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: MuzzelFlash_ParticleSystem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15520,7 +15520,7 @@ GameObject:
   - component: {fileID: 1755544828}
   - component: {fileID: 1755544830}
   - component: {fileID: 1755544829}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: BulletShells_ParticleSystem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20219,7 +20219,7 @@ GameObject:
   - component: {fileID: 1825984631}
   - component: {fileID: 1825984630}
   - component: {fileID: 1825984629}
-  m_Layer: 5
+  m_Layer: 2
   m_Name: HealthCanvas (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20317,7 +20317,7 @@ GameObject:
   - component: {fileID: 1845702945}
   - component: {fileID: 1845702947}
   - component: {fileID: 1845702946}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: GatelingGun_L3_GunBody_LOD2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20394,7 +20394,7 @@ GameObject:
   - component: {fileID: 2012479098}
   - component: {fileID: 2012479100}
   - component: {fileID: 2012479099}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: GatelingGun_L3_GunBody_LOD0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20469,7 +20469,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2113321168}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: GatelingGun_L3_BaseRotation
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20506,7 +20506,7 @@ GameObject:
   - component: {fileID: 5727439561411506758}
   - component: {fileID: 362930176927508262}
   - component: {fileID: 2521133998790584728}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}

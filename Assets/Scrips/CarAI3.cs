@@ -67,7 +67,7 @@ namespace UnityStandardAssets.Vehicles.Car
 
 		float steering;
 		float accelleration;
-		float reverse;
+		float reverse = 0f;
 		float brake;
 		float distanceToWalls;
 		float sensorAngle = 50f;
@@ -171,7 +171,7 @@ namespace UnityStandardAssets.Vehicles.Car
 			//calculated based on test data from TestBrakes, 
 			accelleration = 1f;
 			//here angles and other stuff could be measured but this works fine.
-			if (m_Car.CurrentSpeed > 20f) {
+			/*if (m_Car.CurrentSpeed > 20f) {
 				accelleration = 0f;
 				reverse = 0f;
 			} else {
@@ -180,8 +180,9 @@ namespace UnityStandardAssets.Vehicles.Car
 			}
 			if (Mathf.Abs (angleToTarget) > 120 && stepLocked < 5) {
 				collisionDetected = true;
-			}
+			}*/
 			//For collision
+			/*
 			if(m_Car.CurrentSpeed < 5f && ( straightSensor.distance < 4f || rightFrontSensor.distance < 4f || leftFrontSensor.distance < 4f ) && collisionDetected == false){
 				collisionDetected = true;
 			}
@@ -199,9 +200,9 @@ namespace UnityStandardAssets.Vehicles.Car
 					collisionDetected = false;
 				}
 			}
+			*/
 
-
-			m_Car.Move (steering, accelleration, reverse, 0f);
+			m_Car.Move (steering, 1f, reverse, 0f);
 		}
 
 		[SerializeField]
