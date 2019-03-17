@@ -17591,6 +17591,7 @@ MonoBehaviour:
   isLeader: 0
   debugBox: {fileID: 7633059374788940621, guid: 1d6f19f9e620ebe418fda198053d6fcb,
     type: 3}
+  debugHolder: {fileID: 0}
   forwardDirection: {x: 0, y: 0, z: 0}
   lineRenderers: {fileID: 966512885168712743, guid: b823118c833b4344884529af150af6f3,
     type: 3}
@@ -17967,6 +17968,7 @@ MonoBehaviour:
   isLeader: 0
   debugBox: {fileID: 2144233845652300969, guid: 0c3d1b20df80d1e41b3469ccdbd82dff,
     type: 3}
+  debugHolder: {fileID: 0}
   forwardDirection: {x: 0, y: 0, z: 0}
   lineRenderers: {fileID: 966512885168712743, guid: b823118c833b4344884529af150af6f3,
     type: 3}
@@ -29469,11 +29471,12 @@ MonoBehaviour:
   isLeader: 1
   debugBox: {fileID: 2144233845652300969, guid: 0c3d1b20df80d1e41b3469ccdbd82dff,
     type: 3}
+  debugHolder: {fileID: 913510384}
   forwardDirection: {x: 0, y: 0, z: 0}
   lineRenderers: {fileID: 966512885168712743, guid: b823118c833b4344884529af150af6f3,
     type: 3}
   tester: {fileID: 4512204184830508160, guid: e26ea2c94cb90444696e03142fd250c8, type: 3}
-  debugMap: 0
+  debugMap: 1
   badCube: {fileID: 7633059374788940621, guid: 1d6f19f9e620ebe418fda198053d6fcb, type: 3}
   okCube: {fileID: 2144233845652300969, guid: 0c3d1b20df80d1e41b3469ccdbd82dff, type: 3}
 --- !u!114 &792701571
@@ -30323,6 +30326,36 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 909490773}
   m_Mesh: {fileID: 4300000, guid: fee38b4e5bc7cf04bac3603ccdc5be6d, type: 3}
+--- !u!1 &913510383
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 913510384}
+  m_Layer: 0
+  m_Name: DebugHolder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &913510384
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 913510383}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 191.00787, y: -64.12682, z: 234.3662}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &931145866
 GameObject:
   m_ObjectHideFlags: 0
@@ -67398,7 +67431,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1712461949}
   - component: {fileID: 1712461948}
-  - component: {fileID: 1712461947}
   m_Layer: 0
   m_Name: GameManager (2)
   m_TagString: Untagged
@@ -67406,18 +67438,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1712461947
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1712461946}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 658b0de4ee3ec4f2fbc93d4ccc293929, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1712461948
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -67435,7 +67455,7 @@ MonoBehaviour:
   turret: {fileID: 530427388, guid: 2a8e36ddf0fd44de2bd9497c29c36b67, type: 3}
   number_of_turrets: 8
   number_of_extra_cars: 0
-  random_seed: 8
+  random_seed: 10
   turret_text: {fileID: 1836896012}
   turret_list: []
   weak_turrets: 0

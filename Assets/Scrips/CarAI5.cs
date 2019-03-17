@@ -23,7 +23,7 @@ namespace UnityStandardAssets.Vehicles.Car
 		public string side;
 		public bool isLeader;
 		public GameObject debugBox;
-
+		public Transform debugHolder;
 		Vector3 referenceForward;
 		public Vector3 forwardDirection;
 
@@ -37,7 +37,7 @@ namespace UnityStandardAssets.Vehicles.Car
 
 		//how far to the sides of the leader should we follow?
 		float distanceOffset;
-		float defaultDistanceOffset = 4.5f;
+		float defaultDistanceOffset = 4f;
 
 		//this is useless.
 		float angle = 90;
@@ -73,9 +73,44 @@ namespace UnityStandardAssets.Vehicles.Car
 			if (isLeader) {
 				terrain_manager = terrain_manager_game_object.GetComponent<TerrainManager> ();
 				Init ();
-				globalPath = FindPath (startPos, GetClosestTurret());
+				lockedNode = startPos;
+				GetOffsetPoint (startPos);
+				GetBestPath ();
 				StartCoroutine ("UpdateTarget");
 			}
+		}
+
+		Vector3 targetTurret;
+
+		void GetBestPath(){
+			List<Node> attackPoints = GetRandomSingles ();
+			float shortestDist = 100000;
+			List<Node> bestPath = new List<Node>();
+			Node bestAttackPoint = attackPoints[0];
+			foreach (Node point in attackPoints) {
+				List<Node> pathToPoint = FindPath (lockedNode, point);
+				if (pathToPoint[pathToPoint.Count-1].gScore < shortestDist) {
+					bestAttackPoint = point;
+					bestPath = pathToPoint;
+					shortestDist = pathToPoint[pathToPoint.Count-1].gScore;
+				}
+			}
+			targetTurret = FindTurretToAttack (bestAttackPoint);
+			globalPath = bestPath;
+			if (globalPath.Count < 3) {
+				stepTarget = 0;
+			}
+			ShowPath (globalPath);
+		}
+
+		Vector3 FindTurretToAttack(Node attackPoint){
+			enemies = GameObject.FindGameObjectsWithTag("Enemy");
+			foreach (GameObject enemy in enemies) {
+				if(!Physics.Linecast(attackPoint.position, enemy.transform.position)){
+					return enemy.transform.position;
+				}
+			}
+			return Vector3.one;
 		}
 
 		Vector3 referencePosition;
@@ -84,7 +119,10 @@ namespace UnityStandardAssets.Vehicles.Car
 
 		private void Update()
 		{
-
+			if (Input.GetMouseButtonDown (0)) {
+				Debug.Log ("Fixing bug");
+				m_Car.Move (0f, 1f, -1f, 0f);
+			}
 			if (!isLeader) { //used by followers
 				virtualFrames.Add (new VirtualLeader (leader.transform.position, leader.transform.forward));
 
@@ -117,100 +155,83 @@ namespace UnityStandardAssets.Vehicles.Car
 					Vector3 testPosition = test + virtualLeader.transform.position;
 
 					if (angleToLeader > 10 && side == "Right") {
-						distanceOffset = 4.5f;
+						distanceOffset = 3.5f;
 					} else if (angleToLeader < -10 && side == "Left") {
-						distanceOffset = 4.5f;
+						distanceOffset = 3.5f;
 					} else if (FreeOfObstacles (obstaclePosition) && FreeOfObstacles (testPosition) && FreeOfObstacles (testPos)) {
 						distanceOffset = defaultDistanceOffset;
 					} else {
-						distanceOffset = 4.5f;
+						distanceOffset = 2f;
 					}
 					//debugging reference position
 					box.transform.position = referencePosition + new Vector3 (0, 5, 0);
 				}
 			} else if (hasStarted) { //used by leader
-				Vector3 obstacleOffset = -transform.forward;
-				obstacleOffset *= 6;
-				obstacleOffset = Quaternion.AngleAxis (-90, transform.up) * obstacleOffset;
-				Vector3 obstaclePositionLeft = obstacleOffset + lockedNode.position;
 
-				obstacleOffset = transform.forward;
+				Vector3 obstacleOffset = transform.forward;
 				obstacleOffset *= 10;
 				obstacleOffset = Quaternion.AngleAxis (70, transform.up) * obstacleOffset;
 				Vector3 carPosLeft = obstacleOffset + transform.position;
-
-				obstacleOffset = -transform.forward;
-				obstacleOffset *= 6;
-				obstacleOffset = Quaternion.AngleAxis (90, transform.up) * obstacleOffset;
-				Vector3 obstaclePositionRight = obstacleOffset + lockedNode.position;
 
 				obstacleOffset = transform.forward;
 				obstacleOffset *= 10;
 				obstacleOffset = Quaternion.AngleAxis (-70, transform.up) * obstacleOffset;
 				Vector3 carPosRight = obstacleOffset + transform.position;
-			
+
 
 				//obstacle avoidance for leader car.
-				if (!FreeOfObstacles (obstaclePositionLeft)) {
-					referencePosition = obstaclePositionRight;
-				} else if (!FreeOfObstacles (obstaclePositionRight)) {
-					referencePosition = obstaclePositionLeft;
-				} else if (!FreeOfObstacles (carPosLeft)) {
+				if (!FreeOfObstacles (carPosLeft)) {
 					referencePosition = carPosRight;
 				} else if (!FreeOfObstacles (carPosRight)) {
 					referencePosition = carPosLeft;
 				} else {
-					referencePosition = lockedNode.position;
-				}	
+					referencePosition = GetOffsetPoint(lockedNode);
+				}
 			}
-			Drive ();
+			if (!start) {
+				Drive ();
+			} else {
+				BackOff ();
+			}
+		}
+
+
+		Vector3 GetOffsetPoint(Node target){
+			Vector3 obstaclePositionRight = Vector3.right * 6 + target.position;
+			Vector3 obstaclePositionLeft = Vector3.left * 6 + target.position;
+			Vector3 obstaclePositionForward = Vector3.forward * 6 + target.position;
+			Vector3 obstaclePositionBack = Vector3.back * 6 + target.position;
+
+			if (!FreeOfObstacles (obstaclePositionLeft)) {
+				return obstaclePositionRight;
+			} else if (!FreeOfObstacles (obstaclePositionRight)) {
+				return obstaclePositionLeft;
+			} else if (!FreeOfObstacles (obstaclePositionBack)) {
+				return obstaclePositionForward;
+			} else if (!FreeOfObstacles (obstaclePositionForward)) {
+				return obstaclePositionBack;
+			} else {
+				return target.position;
+			}
 		}
 
 		//after reference position is set we drive towards it, followers must wait until leader has started (might be unnecessary)
 		bool hasStarted = false;
 
-		/*
-		void LateUpdate(){
-			if (isLeader && lockedNode != null) {
-				Drive ();
-			} else if (leader.GetComponent<CarAI5>().hasStarted) {
-				Drive ();
-			}
-		}
-*/
-		Node GetClosestTurret(){
-			enemies = GameObject.FindGameObjectsWithTag("Enemy");
-			float shortestDistance = 10000;
-			Vector3 closestPosition = Vector3.one;
-			foreach (GameObject enemy in enemies) {
-				float dist = Vector3.Distance (enemy.transform.position, transform.position);
-				if (dist < shortestDistance) {
-					closestPosition = enemy.transform.position;
-					shortestDistance = dist;
-				}
-			}
-
-			Node closestTurret = null;
-			for (int i = 0; i < turrets.Length; i++) {
-				GameObject test = Instantiate (tester, turrets[i].position, Quaternion.identity);
-				if (test.GetComponent<BoxCollider> ().bounds.Contains (closestPosition)) {
-					closestTurret = turrets [i];
-					Destroy (test);
-					break;
-				}
-				Destroy (test);
-			}
-			return closestTurret;
-		}
-
 		float steering = 0f;
 		float accelleration = 1f;
 		float brake = 0f;
 
+		bool start = true;
+
+		void BackOff(){
+			if (Physics.Raycast (transform.position, -transform.forward, 3)) {
+				start = false;
+			}
+			m_Car.Move (0f, 0f, -1f, 0f);
+		}
 		void Drive(){
-			
 			float angleToRefPos = CalculateAngle (referencePosition);
-			float angleToLeader = CalculateAngle (leader.transform.position);
 			float distanceToRefPos = Vector3.Distance (transform.position, referencePosition);
 			Vector3 direction = (referencePosition - transform.position).normalized;
 			Vector3 leaderDirection = (leader.transform.position - transform.position).normalized;
@@ -229,7 +250,8 @@ namespace UnityStandardAssets.Vehicles.Car
 			if (refPosIsInFront && possibleDistance < distanceToRefPos) {
 				accelleration = 1f;
 				brake = 0f;
-			} else {
+			} else if(!isLeader && m_Car.CurrentSpeed > 2){
+				
 				accelleration = 0f;
 				brake = -1f;
 			}
@@ -243,12 +265,12 @@ namespace UnityStandardAssets.Vehicles.Car
 				accelleration = 0.5f;
 				brake = 0f;
 			}
-
 			//leader linecast to target turret and after a 3 seconds recalculated the grid as well as gets a new path.
-			if (isLeader && m_Car.CurrentSpeed > 5 && !Physics.Linecast(transform.position, globalPath[globalPath.Count-1].position)){
-				accelleration = 0f;
+			if (isLeader && m_Car.CurrentSpeed > 1 && !Physics.Linecast(transform.position+Vector3.up*2, targetTurret) && Mathf.Abs(transform.position.x-globalPath[globalPath.Count-1].position.x) < 10 && Mathf.Abs(transform.position.z-globalPath[globalPath.Count-1].position.z) < 10 ){
+				accelleration = 0;
 				brake = -1f;
 				if (recalculate) {
+					Debug.Log ("now");
 					recalculate = false;
 					StartCoroutine ("GetNewPathAfterDelay");
 				}
@@ -258,20 +280,37 @@ namespace UnityStandardAssets.Vehicles.Car
 			if (!leaderIsInFront && !isLeader && m_Car.CurrentSpeed > 5f) {
 				accelleration = 0f;
 				brake = -1f;
+			} else if (isLeader && !refPosIsInFront) {
+				accelleration = 0f;
+				brake = 0f;
+				steering = 0f;
 			}
 			m_Car.Move (steering, accelleration, brake, 0f);
+		}
 
+		bool TurretIsKilled(){
+			enemies = GameObject.FindGameObjectsWithTag("Enemy");
+			foreach (GameObject enemy in enemies) {
+				if (enemy.transform.position == targetTurret) {
+					return false;
+				}
+			}
+			return true;
 		}
 
 		//finds a new path to "closestTurret" could maybe be some other node or try to drive to all of them and take the lowest score?
 		IEnumerator GetNewPathAfterDelay(){
-			yield return new WaitForSeconds (3f);
+			while (!TurretIsKilled ()) {
+				yield return null;
+			}
 			RecalculateThreatScore ();
-			globalPath = FindPath (lockedNode, GetClosestTurret ());
-			stepLocked = 1;
-			stepTarget = 2;
-			lockedNode = globalPath [1];
-			targetNode = globalPath [2];
+			GetBestPath ();
+			ShowPath (globalPath);
+			stepLocked = 0;
+			stepTarget = 0;
+			lockedNode = globalPath [0];
+			targetNode = globalPath [0];
+
 			//restarts the coroutine for updating leader target if it has terminated.
 			if (!updatingTarget) {
 				updatingTarget = true;
@@ -282,8 +321,8 @@ namespace UnityStandardAssets.Vehicles.Car
 
 		bool recalculate = true;
 
-		int stepLocked = 1;
-		int stepTarget = 2;
+		int stepLocked = 0;
+		int stepTarget = 0;
 		Node lockedNode;
 		Node targetNode;
 		bool updatingTarget = false;
@@ -362,10 +401,53 @@ namespace UnityStandardAssets.Vehicles.Car
 			return angle;
 		}
 
+		List<Node> GetRandomSingles(){
+			List<Node> singles = new List<Node> ();
+			for (int i = 0; i < 40; i+=10) {
+				for (int j = 0; j < 40; j+=10) {
+					Node foundOne = GetFromSmallQuadrant (i, j, 100);
+					if (foundOne != null) {
+						singles.Add (foundOne);
+					}
+				}
+			}
+			if (singles == null) {
+				for (int i = 0; i < 40; i+=10) {
+					for (int j = 0; j < 40; j+=10) {
+						Node foundOne = GetFromSmallQuadrant (i, j, 200);
+						if (foundOne != null) {
+							singles.Add (foundOne);
+						}
+					}
+				}
+			}
+			return singles;
+		}
+
+		Node GetFromSmallQuadrant(int index_x, int index_z, int maxThreat){
+			Node bestNode = null;
+			float olddistance = 10000;
+			for (int i = 0; i < 10; i++) {
+				for (int j = 0; j < 10; j++) {
+					if (FreeOfObstacles (nodes [index_x + i, index_z + j].position) && nodes[index_x + i, index_z + j].threatScore == maxThreat) {
+						float dist = Vector3.Distance (transform.position, nodes [index_x + i, index_z + j].position);
+						if (dist < olddistance) {
+							bestNode = nodes [index_x + i, index_z + j];
+							olddistance = dist;
+						}
+					}
+				}
+			}
+			return bestNode;
+		}
+
 		//recalculates the whole map and the score from which the "rest" turrets can see.
 		void RecalculateThreatScore(){
 			enemies = GameObject.FindGameObjectsWithTag("Enemy");
 			RaycastHit hit;
+			foreach (Transform child in debugHolder) {
+				GameObject.Destroy (child.gameObject);
+			}
 			for (int i = 0; i < 40; i++) {
 				for (int j = 0; j < 40; j++) {
 					if(FreeOfObstacles(nodes[i,j].position)){
@@ -377,9 +459,9 @@ namespace UnityStandardAssets.Vehicles.Car
 								score += 100;
 							}
 						}
-						//Debugging used to see all nodes with a score of 0/100 (none or 1 turret can be seen)
-						if (debugMap && score < 200) {
-							Instantiate (okCube, new Vector3 (nodes[i,j].position.x, 10f, nodes[i,j].position.z), Quaternion.identity);
+						//Debugging used to see all nodes with a score of 100 (1 turret can be seen)
+						if (debugMap && score < 200 && score > 0) {
+							Instantiate (okCube, new Vector3 (nodes[i,j].position.x, 10f, nodes[i,j].position.z), Quaternion.identity, debugHolder);
 						}
 						nodes [i, j].threatScore = score;
 					}
@@ -434,7 +516,7 @@ namespace UnityStandardAssets.Vehicles.Car
 				current = nodes [current.newX, current.newZ].cameFrom;
 			}
 			path.Reverse ();
-			ShowPath (path);
+			//ShowPath (path);
 			return path;
 		}
 
@@ -566,7 +648,6 @@ namespace UnityStandardAssets.Vehicles.Car
 
 			enemies = GameObject.FindGameObjectsWithTag("Enemy");
 			turrets = new Node[enemies.Length];
-			int timesIWentIn = 0;
 			for (int i = 0; i < newX; i++) {
 				if (i % (numblocksX) == 0) {
 					oldx++;
@@ -635,9 +716,9 @@ namespace UnityStandardAssets.Vehicles.Car
 
 		void ShowMapTraversability(Node node){
 			if (terrain_manager.myInfo.traversability [node.blockX, node.blockZ] == 1f) {
-				Instantiate (badCube, new Vector3 (node.position.x, 10f, node.position.z), Quaternion.identity);
-			} else if(node.threatScore < 200){
-				Instantiate (okCube, new Vector3 (node.position.x, 10f, node.position.z), Quaternion.identity);
+				//Instantiate (badCube, new Vector3 (node.position.x, 10f, node.position.z), Quaternion.identity, debugHolder);
+			} else if(node.threatScore < 200 && node.threatScore > 0){
+				Instantiate (okCube, new Vector3 (node.position.x, 10f, node.position.z), Quaternion.identity, debugHolder);
 			}
 		}
 	}

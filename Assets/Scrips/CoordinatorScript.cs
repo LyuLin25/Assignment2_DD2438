@@ -41,7 +41,7 @@ public class CoordinatorScript : MonoBehaviour
     void Update()
     {
 		if (Input.GetMouseButtonDown (0)) {
-			Time.timeScale = 10f;
+			//Time.timeScale = 10f;
 		}
     }
 

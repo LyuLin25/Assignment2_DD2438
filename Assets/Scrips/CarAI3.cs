@@ -202,7 +202,7 @@ namespace UnityStandardAssets.Vehicles.Car
 			}
 			*/
 
-			m_Car.Move (steering, 1f, reverse, 0f);
+			m_Car.Move (steering, 1f, 0f, 0f);
 		}
 
 		[SerializeField]
