@@ -32,7 +32,7 @@ namespace UnityStandardAssets.Vehicles.Car
 		int frameCount = 3;
 
 		float distanceOffset;
-		float defaultDistanceOffset = 22;
+		float defaultDistanceOffset = 20f;
 		float angle = 90;
 		float forwardAngle = 70;
 		private void Start()
@@ -69,6 +69,11 @@ namespace UnityStandardAssets.Vehicles.Car
 			}
 
 			if (virtualFrames.Count > frameCount) {
+				float testAngle = Vector3.Angle (transform.forward, leader.transform.forward);
+				Vector3 testCross = Vector3.Cross (leader.transform.forward, transform.forward);
+				if(testCross.y > 0){
+					testAngle = -testAngle;
+				}
 				float angleToLeader = CalculateAngleFromVirtual (virtualFrames[0], leader.transform.position);
 
 				virtualLeader.transform.position = virtualFrames [0].position;
@@ -96,14 +101,14 @@ namespace UnityStandardAssets.Vehicles.Car
 				test = Quaternion.AngleAxis (angle, transform.up) * test;
 				Vector3 testPosition = test + virtualLeader.transform.position;
 
-				if (angleToLeader > 10 && side == "Right") {
-					distanceOffset = 2f;
-				} else if (angleToLeader < -10 && side == "Left") {
-					distanceOffset = 2f;
+				if (testAngle > 20 && side == "Left") {
+					distanceOffset = 3f;
+				} else if (testAngle < -20 && side == "Right") {
+					distanceOffset = 3f;
 				} else if (FreeOfObstacles (obstaclePosition) && FreeOfObstacles(testPosition) && FreeOfObstacles(testPos)) {
 					distanceOffset = defaultDistanceOffset;
 				} else {
-					distanceOffset = 2f;
+					distanceOffset = 0f;
 				}
 				box.transform.position = referencePosition + new Vector3(0,5,0);
 			}
@@ -111,14 +116,14 @@ namespace UnityStandardAssets.Vehicles.Car
 		private void LateUpdate(){
 			Drive ();
 		}
-
+		bool collisionDetected = false;
 		void Drive(){
 			float angleToRefPos = CalculateAngle (referencePosition);
 			float angleToLeader = CalculateAngle (leader.transform.position);
 			float distanceToRefPos = Vector3.Distance (transform.position, referencePosition);
 			float distanceToLeader = Vector3.Distance (transform.position, leader.transform.position);
 			Vector3 direction = (referencePosition - transform.position).normalized;
-			float steeringDependency = 45f;
+			float steeringDependency = 60f;
 			if (distanceToRefPos > 25) {
 				steeringDependency = 120f;
 			}
@@ -133,23 +138,35 @@ namespace UnityStandardAssets.Vehicles.Car
 			if (refPosIsInFront && possibleDistance < distanceToRefPos) {
 				accelleration = 1f;
 				brake = 0f;
-			} else {
+			} else if(m_Car.CurrentSpeed > 5){
 				accelleration = 0f;
 				brake = -1f;
-				if (!refPosIsInFront && possibleDistance < distanceToLeader) {
-					steering = angleToLeader / steeringDependency;
-					brake = 0f;
-					accelleration = 0.5f;
-				} else {
-					steering = -steering;
-				}
 			}
 
 			if (distanceToLeader < distanceToRefPos && !refPosIsInFront) {
-				
 				brake = 0f;
 				accelleration = 0f;
 			}
+
+			if(m_Car.CurrentSpeed < 5f && ((Physics.Raycast(transform.position+transform.right, transform.forward, 10) || Physics.Raycast(transform.position-transform.right, transform.forward, 10)) && collisionDetected == false)){
+				collisionDetected = true;
+			}
+			if(collisionDetected){
+				accelleration = 0f;
+				brake = -1f;
+				steering = -steering;
+				if (steering < 0) {
+					steering = -1;
+				}
+				if (steering > 0) {
+					steering = 1;
+				}
+
+				if(!Physics.Raycast(transform.position, transform.forward, 10)){
+					collisionDetected = false;
+				}
+			}
+
 			m_Car.Move (steering, accelleration, brake, 0f);
 
 		}

@@ -41,13 +41,19 @@ public class CoordinatorScript : MonoBehaviour
     void Update()
     {
 		if (Input.GetMouseButtonDown (0)) {
-			//Time.timeScale = 10f;
+			Time.timeScale = 2f;
 		}
     }
 
 	void SwapFirsts(){
+		List<Node> oldShortestPath;
+		List<Node> oldLongestPath;
+
+
 		if(firstPath.Count > secondPath.Count + distanceMatrix[0,firstPathTurrets[1].turretNumber].Count*2){
 			//give first to second
+			oldLongestPath = firstPath;
+			oldShortestPath = secondPath;
 			List<Node> path1 = FindPath(startPosCar1,firstPathTurrets[2]);
 			int removeCount = 0;
 			foreach (Node target in firstPath) {
@@ -75,8 +81,17 @@ public class CoordinatorScript : MonoBehaviour
 			}
 			secondPath.RemoveRange (0, removeCount);
 			secondPath.InsertRange (0, path2);
+
+			if (oldLongestPath.Count < secondPath.Count) {
+				Debug.Log ("not an improvement");
+				firstPath = oldLongestPath;
+				secondPath = oldShortestPath;
+			}
+
 		}else if(firstPath.Count > thirdPath.Count + distanceMatrix[0,firstPathTurrets[1].turretNumber].Count*2){
 			//give first to third
+			oldLongestPath = firstPath;
+			oldShortestPath = thirdPath;
 			List<Node> path1 = FindPath(startPosCar1,firstPathTurrets[2]);
 			int removeCount = 0;
 			foreach (Node target in firstPath) {
@@ -104,14 +119,161 @@ public class CoordinatorScript : MonoBehaviour
 			}
 			thirdPath.RemoveRange (0, removeCount);
 			thirdPath.InsertRange (0, path3);
+
+			if (oldLongestPath.Count < thirdPath.Count) {
+				Debug.Log ("not an improvement");
+				firstPath = oldLongestPath;
+				thirdPath = oldShortestPath;
+			}
 		}else if(secondPath.Count > firstPath.Count + distanceMatrix[0,secondPathTurrets[1].turretNumber].Count*2){
 			//give second to first
+			oldLongestPath = secondPath;
+			oldShortestPath = firstPath;
+			List<Node> path2 = FindPath(startPosCar2,secondPathTurrets[2]);
+			int removeCount = 0;
+			foreach (Node target in secondPath) {
+				if (target != secondPathTurrets [2]) {
+					removeCount++;
+				} else {
+					removeCount++;
+					break;
+				}
+			}
+			secondPath.RemoveRange (0, removeCount);
+			removeCount = 0;
+			secondPath.InsertRange (0, path2);
+			List<Node> path1 = FindPath (startPosCar1, secondPathTurrets [1]);
+			//nodes[firstPathTurrets[1].newX,firstPathTurrets[1].newZ].cameFrom 
+			List<Node> path11 = FindPath (secondPathTurrets [1], firstPathTurrets [1]);
+			path1.AddRange (path11);
+			foreach (Node target in firstPath) {
+				if (target != firstPathTurrets [1]) {
+					removeCount++;
+				} else {
+					removeCount++;
+					break;
+				}
+			}
+			firstPath.RemoveRange (0, removeCount);
+			firstPath.InsertRange (0, path1);
+
+			if (oldLongestPath.Count < firstPath.Count) {
+				Debug.Log ("not an improvement");
+				secondPath = oldLongestPath;
+				firstPath = oldShortestPath;
+			}
 		}else if(secondPath.Count > thirdPath.Count + distanceMatrix[0,secondPathTurrets[1].turretNumber].Count*2){
 			//give second to third
+			oldLongestPath = secondPath;
+			oldShortestPath = thirdPath;
+			List<Node> path2 = FindPath(startPosCar2,secondPathTurrets[2]);
+			int removeCount = 0;
+			foreach (Node target in secondPath) {
+				if (target != firstPathTurrets [2]) {
+					removeCount++;
+				} else {
+					removeCount++;
+					break;
+				}
+			}
+			secondPath.RemoveRange (0, removeCount);
+			removeCount = 0;
+			secondPath.InsertRange (0, path2);
+			List<Node> path3 = FindPath (startPosCar3, firstPathTurrets [1]);
+			List<Node> path31 = FindPath (firstPathTurrets [1], thirdPathTurrets [1]);
+			path3.AddRange (path31);
+			foreach (Node target in thirdPath) {
+				if (target != thirdPathTurrets [1]) {
+					removeCount++;
+				} else {
+					removeCount++;
+					break;
+				}
+			}
+			thirdPath.RemoveRange (0, removeCount);
+			thirdPath.InsertRange (0, path3);
+
+			if (oldLongestPath.Count < thirdPath.Count) {
+				Debug.Log ("not an improvement");
+				secondPath = oldLongestPath;
+				thirdPath = oldShortestPath;
+			}
 		}else if(thirdPath.Count > firstPath.Count + distanceMatrix[0,thirdPathTurrets[1].turretNumber].Count*2){
 			//give third to first
+			oldLongestPath = thirdPath;
+			oldShortestPath = firstPath;
+			List<Node> path3 = FindPath(startPosCar3,thirdPathTurrets[2]);
+			int removeCount = 0;
+			foreach (Node target in thirdPath) {
+				if (target != thirdPathTurrets [2]) {
+					removeCount++;
+				} else {
+					removeCount++;
+					break;
+				}
+			}
+			thirdPath.RemoveRange (0, removeCount);
+			removeCount = 0;
+			thirdPath.InsertRange (0, path3);
+			List<Node> path1 = FindPath (startPosCar1, secondPathTurrets [1]);
+			//nodes[firstPathTurrets[1].newX,firstPathTurrets[1].newZ].cameFrom 
+			List<Node> path11 = FindPath (secondPathTurrets [1], firstPathTurrets [1]);
+			path1.AddRange (path11);
+			foreach (Node target in thirdPath) {
+				if (target != firstPathTurrets [1]) {
+					removeCount++;
+				} else {
+					removeCount++;
+					break;
+				}
+			}
+			firstPath.RemoveRange (0, removeCount);
+			firstPath.InsertRange (0, path1);
+	
+			if (oldLongestPath.Count < firstPath.Count) {
+				Debug.Log ("not an improvement");
+				thirdPath = oldLongestPath;
+				firstPath = oldShortestPath;
+			}
+
+
 		}else if(thirdPath.Count > secondPath.Count + distanceMatrix[0,thirdPathTurrets[1].turretNumber].Count*2){
 			//give third to second
+			oldLongestPath = thirdPath;
+			oldShortestPath = firstPath;
+			List<Node> path3 = FindPath(startPosCar3,thirdPathTurrets[2]);
+			int removeCount = 0;
+			foreach (Node target in thirdPath) {
+				if (target != thirdPathTurrets [2]) {
+					removeCount++;
+				} else {
+					removeCount++;
+					break;
+				}
+			}
+			thirdPath.RemoveRange (0, removeCount);
+			removeCount = 0;
+			thirdPath.InsertRange (0, path3);
+			List<Node> path2 = FindPath (startPosCar2, firstPathTurrets [1]);
+			//nodes[firstPathTurrets[1].newX,firstPathTurrets[1].newZ].cameFrom 
+			List<Node> path21 = FindPath (firstPathTurrets [1], secondPathTurrets [1]);
+			path2.AddRange (path21);
+			foreach (Node target in secondPath) {
+				if (target != secondPathTurrets [1]) {
+					removeCount++;
+				} else {
+					removeCount++;
+					break;
+				}
+			}
+			secondPath.RemoveRange (0, removeCount);
+			secondPath.InsertRange (0, path2);
+
+			if (oldLongestPath.Count < secondPath.Count) {
+				Debug.Log ("not an improvement");
+				firstPath = oldLongestPath;
+				secondPath = oldShortestPath;
+			}
 		}
 	}
 
@@ -244,8 +406,12 @@ public class CoordinatorScript : MonoBehaviour
 				firstPathTurrets.Add (old1);
 			}
 		}
-		SwapFirsts ();
+		if (swapFirst) {
+			SwapFirsts ();
+		}
 	}
+
+	public bool swapFirst = true;
 
 	void resetNodes(){
 		for (int i = 0; i < x_N * 2; i++) {

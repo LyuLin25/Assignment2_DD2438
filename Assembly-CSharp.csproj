@@ -58,6 +58,7 @@
      <Compile Include="Assets\Scrips\CarAI3.cs" />
      <Compile Include="Assets\Scrips\CarAI4.cs" />
      <Compile Include="Assets\Scrips\CarAI5.cs" />
+     <Compile Include="Assets\Scrips\CoordinatorFourScript.cs" />
      <Compile Include="Assets\Scrips\CoordinatorScript.cs" />
      <Compile Include="Assets\Scrips\Destructable.cs" />
      <Compile Include="Assets\Scrips\FollowObject.cs" />

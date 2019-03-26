@@ -73,6 +73,7 @@ public class GameManager : MonoBehaviour {
             if (completion_time < start_time)
             {
                 completion_time = Time.time - start_time;
+				Debug.Log (completion_time);
 
             }
             turret_text.text += " Mission Accomplished in " + completion_time.ToString("n2") + "seconds!";

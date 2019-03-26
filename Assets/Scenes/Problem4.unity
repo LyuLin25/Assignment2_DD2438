@@ -5395,7 +5395,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed951abcb196b40f38b3699dfa82c76c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  terrain_filename: text/terrain4
+  terrain_filename: text/terrain4_new
   myInfo:
     file_name: 
     x_low: 0
@@ -22731,8 +22731,6 @@ MonoBehaviour:
   side: Right
   debugBox: {fileID: 7633059374788940621, guid: 1d6f19f9e620ebe418fda198053d6fcb,
     type: 3}
-  referenceForward: {x: 0, y: 0, z: 0}
-  forwardDirection: {x: 0, y: 0, z: 0}
 --- !u!114 &458510688
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -82747,8 +82745,6 @@ MonoBehaviour:
   side: Right
   debugBox: {fileID: 2144233845652300969, guid: 0c3d1b20df80d1e41b3469ccdbd82dff,
     type: 3}
-  referenceForward: {x: 0, y: 0, z: 0}
-  forwardDirection: {x: 0, y: 0, z: 0}
 --- !u!114 &1471962244
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -100335,8 +100331,6 @@ MonoBehaviour:
   side: Left
   debugBox: {fileID: 2144233845652300969, guid: 0c3d1b20df80d1e41b3469ccdbd82dff,
     type: 3}
-  referenceForward: {x: 0, y: 0, z: 0}
-  forwardDirection: {x: 0, y: 0, z: 0}
 --- !u!114 &1902951897
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -101219,8 +101213,6 @@ MonoBehaviour:
   side: Left
   debugBox: {fileID: 7633059374788940621, guid: 1d6f19f9e620ebe418fda198053d6fcb,
     type: 3}
-  referenceForward: {x: 0, y: 0, z: 0}
-  forwardDirection: {x: 0, y: 0, z: 0}
 --- !u!114 &1993684193
 MonoBehaviour:
   m_ObjectHideFlags: 0

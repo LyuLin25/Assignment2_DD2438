@@ -17549,7 +17549,7 @@ MonoBehaviour:
   m_MaxHandbrakeTorque: 100000000
   m_Downforce: 100
   m_SpeedType: 0
-  m_Topspeed: 21
+  m_Topspeed: 40
   m_RevRangeBoundary: 1
   m_SlipLimit: 0.3
   m_BrakeTorque: 20000
@@ -18074,7 +18074,7 @@ MonoBehaviour:
   m_MaxHandbrakeTorque: 100000000
   m_Downforce: 100
   m_SpeedType: 0
-  m_Topspeed: 21
+  m_Topspeed: 40
   m_RevRangeBoundary: 1
   m_SlipLimit: 0.3
   m_BrakeTorque: 20000
@@ -29577,7 +29577,7 @@ MonoBehaviour:
   m_MaxHandbrakeTorque: 100000000
   m_Downforce: 100
   m_SpeedType: 0
-  m_Topspeed: 18
+  m_Topspeed: 30
   m_RevRangeBoundary: 1
   m_SlipLimit: 0.3
   m_BrakeTorque: 20000
@@ -66900,7 +66900,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed951abcb196b40f38b3699dfa82c76c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  terrain_filename: text/terrain5
+  terrain_filename: text/terrain5_new
   myInfo:
     file_name: 
     x_low: 0
@@ -67455,7 +67455,7 @@ MonoBehaviour:
   turret: {fileID: 530427388, guid: 2a8e36ddf0fd44de2bd9497c29c36b67, type: 3}
   number_of_turrets: 8
   number_of_extra_cars: 0
-  random_seed: 10
+  random_seed: 8
   turret_text: {fileID: 1836896012}
   turret_list: []
   weak_turrets: 0

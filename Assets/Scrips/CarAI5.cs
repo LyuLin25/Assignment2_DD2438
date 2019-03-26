@@ -37,7 +37,7 @@ namespace UnityStandardAssets.Vehicles.Car
 
 		//how far to the sides of the leader should we follow?
 		float distanceOffset;
-		float defaultDistanceOffset = 4f;
+		float defaultDistanceOffset = 3.5f;
 
 		//this is useless.
 		float angle = 90;
@@ -64,7 +64,7 @@ namespace UnityStandardAssets.Vehicles.Car
 				}
 				referencePosition = virtualLeader.transform.position;
 				forwardDirection = transform.forward;
-				box = Instantiate (debugBox, referencePosition+Vector3.up*5, Quaternion.identity);
+				//box = Instantiate (debugBox, referencePosition+Vector3.up*5, Quaternion.identity);
 			}
 		}
 
@@ -100,7 +100,7 @@ namespace UnityStandardAssets.Vehicles.Car
 			if (globalPath.Count < 3) {
 				stepTarget = 0;
 			}
-			ShowPath (globalPath);
+			//ShowPath (globalPath);
 		}
 
 		Vector3 FindTurretToAttack(Node attackPoint){
@@ -164,7 +164,7 @@ namespace UnityStandardAssets.Vehicles.Car
 						distanceOffset = 2f;
 					}
 					//debugging reference position
-					box.transform.position = referencePosition + new Vector3 (0, 5, 0);
+					//box.transform.position = referencePosition + new Vector3 (0, 5, 0);
 				}
 			} else if (hasStarted) { //used by leader
 
@@ -230,6 +230,8 @@ namespace UnityStandardAssets.Vehicles.Car
 			}
 			m_Car.Move (0f, 0f, -1f, 0f);
 		}
+		int oldSizeOfEnemies;
+		bool collisionDetected = false;
 		void Drive(){
 			float angleToRefPos = CalculateAngle (referencePosition);
 			float distanceToRefPos = Vector3.Distance (transform.position, referencePosition);
@@ -285,7 +287,34 @@ namespace UnityStandardAssets.Vehicles.Car
 				brake = 0f;
 				steering = 0f;
 			}
+
+			if(m_Car.CurrentSpeed < 5f && ((Physics.Raycast(transform.position+transform.right, transform.forward, 15) || Physics.Raycast(transform.position-transform.right, transform.forward, 15)) && collisionDetected == false)){
+				collisionDetected = true;
+			}
+			if(collisionDetected){
+				accelleration = 0f;
+				brake = -1f;
+				steering = -steering;
+				if (steering < 0) {
+					steering = -1;
+				}
+				if (steering > 0) {
+					steering = 1;
+				}
+
+				if(!Physics.Raycast(transform.position, transform.forward, 15)){
+					collisionDetected = false;
+				}
+			}
+
 			m_Car.Move (steering, accelleration, brake, 0f);
+
+			enemies = GameObject.FindGameObjectsWithTag("Enemy");
+			if (enemies.Length < oldSizeOfEnemies) {
+				recalculate = false;
+				shouldUpdate = true;
+				StartCoroutine ("GetNewPathAfterDelay");
+			}
 		}
 
 		bool TurretIsKilled(){
@@ -297,15 +326,19 @@ namespace UnityStandardAssets.Vehicles.Car
 			}
 			return true;
 		}
-
+		bool shouldUpdate = false;
 		//finds a new path to "closestTurret" could maybe be some other node or try to drive to all of them and take the lowest score?
 		IEnumerator GetNewPathAfterDelay(){
 			while (!TurretIsKilled ()) {
+				if (shouldUpdate) {
+					break;
+				}
 				yield return null;
 			}
+			shouldUpdate = false;
 			RecalculateThreatScore ();
 			GetBestPath ();
-			ShowPath (globalPath);
+			//ShowPath (globalPath);
 			stepLocked = 0;
 			stepTarget = 0;
 			lockedNode = globalPath [0];
@@ -444,6 +477,7 @@ namespace UnityStandardAssets.Vehicles.Car
 		//recalculates the whole map and the score from which the "rest" turrets can see.
 		void RecalculateThreatScore(){
 			enemies = GameObject.FindGameObjectsWithTag("Enemy");
+			oldSizeOfEnemies = enemies.Length;
 			RaycastHit hit;
 			foreach (Transform child in debugHolder) {
 				GameObject.Destroy (child.gameObject);
@@ -647,6 +681,7 @@ namespace UnityStandardAssets.Vehicles.Car
 			float posZ = worldposZmin;
 
 			enemies = GameObject.FindGameObjectsWithTag("Enemy");
+			oldSizeOfEnemies = enemies.Length;
 			turrets = new Node[enemies.Length];
 			for (int i = 0; i < newX; i++) {
 				if (i % (numblocksX) == 0) {

@@ -1,11 +1,15 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scrips\CoordinatorScript.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scrips\CarAI5.cs">
     <Files>
-      <File FileName="Assets\Scrips\CarAI3.cs" Line="46" Column="1" />
-      <File FileName="Assets\Scrips\CoordinatorScript.cs" Line="138" Column="2" />
-      <File FileName="Assets\Scrips\GatlingGun.cs" Line="99" Column="23" />
-      <File FileName="Assets\Scrips\Destructable.cs" Line="33" Column="15" />
+      <File FileName="Assets\Scrips\CarAI3.cs" Line="68" Column="34" />
+      <File FileName="Assets\Scrips\CoordinatorScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scrips\GatlingGun.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scrips\Destructable.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scrips\CarAI4.cs" Line="168" Column="5" />
+      <File FileName="Assets\Scrips\CarAI5.cs" Line="305" Column="66" />
+      <File FileName="Assets\Standard Assets\Vehicles\Car\Scripts\CarController.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scrips\GameManager.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
